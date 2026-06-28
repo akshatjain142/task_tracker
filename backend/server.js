@@ -15,22 +15,12 @@ app.use(express.json());
 
 app.use('/api/tasks', taskRoutes);
 
-if (process.env.NODE_ENV === 'production') {
-  const path = require('path');
-  const clientBuildPath = path.join(__dirname, '../frontend/dist');
-  app.use(express.static(clientBuildPath));
-
-  app.get('*', (req, res) => {
-    if (req.path.startsWith('/api/')) {
-      return res.status(404).json({ error: 'Not found' });
-    }
-    res.sendFile(path.join(clientBuildPath, 'index.html'));
+app.get("/", (req, res) => {
+  res.json({
+    success: true,
+    message: "Task Tracker API is running 🚀",
   });
-} else {
-  app.get('/', (req, res) => {
-    res.send({ message: 'Task Tracker API is running.' });
-  });
-}
+});
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
